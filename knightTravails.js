@@ -25,3 +25,55 @@ function getValidMoves([x, y]) {
 console.log(getValidMoves([0, 0])); // expected = [[2,1],[1,2]]
 console.log(getValidMoves([3, 3])); // expected = 8 squares
 console.log(getValidMoves([7, 7])); // expected = [[5,6],[6,5]]
+
+function knightMoves(start, end) {
+  const startKey = start.join(",");
+  const endKey = end.join(",");
+
+  // same square, no moves needed
+  if (startKey === endKey) return [start];
+
+  const queue = [start];
+  const visited = new Set([startKey]);
+  const parent = new Map(); // "x,y" -> the square we came from
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+
+    for (const next of getValidMoves(current)) {
+      const nextKey = next.join(",");
+
+      // already reached this square, so this path isn't shorter
+      if (visited.has(nextKey)) continue;
+
+      visited.add(nextKey);
+      parent.set(nextKey, current);
+
+      // found the target, walk parents back to start
+      if (nextKey === endKey) {
+        const path = [next];
+        let key = nextKey;
+
+        while (parent.has(key)) {
+          const prev = parent.get(key);
+          path.push(prev);
+          key = prev.join(",");
+        }
+
+        return path.reverse();
+      }
+
+      queue.push(next);
+    }
+  }
+
+  return null; // unreachable on an 8x8 board
+}
+
+// quick tests
+console.log(knightMoves([0, 0], [1, 2])); // [[0,0],[1,2]]
+console.log(knightMoves([0, 0], [3, 3])); // 3 squares, 2 moves
+console.log(knightMoves([3, 3], [0, 0])); // reverse of above
+console.log(knightMoves([0, 0], [7, 7])); // 7 squares, 6 moves
+console.log(knightMoves([3, 3], [4, 3])); // 4 squares, 3 moves
+console.log(knightMoves([0, 0], [0, 0])); // [[0,0]]
