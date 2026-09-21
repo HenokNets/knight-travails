@@ -27,6 +27,11 @@ console.log(getValidMoves([3, 3])); // expected = 8 squares
 console.log(getValidMoves([7, 7])); // expected = [[5,6],[6,5]]
 
 function knightMoves(start, end) {
+  // both squares must be on the board
+  if (!isOnBoard(start) || !isOnBoard(end)) {
+    throw new Error("start and end must be on the board (0-7)");
+  }
+
   const startKey = start.join(",");
   const endKey = end.join(",");
 
@@ -70,6 +75,19 @@ function knightMoves(start, end) {
   return null; // unreachable on an 8x8 board
 }
 
+// print in the format the assignment shows
+function printKnightMoves(start, end) {
+  const path = knightMoves(start, end);
+  const moves = path.length - 1;
+
+  console.log(`> knightMoves([${start}],[${end}])`);
+  console.log(`=> You made it in ${moves} move${moves === 1 ? "" : "s"}!  Here's your path:`);
+
+  for (const square of path) {
+    console.log(`  [${square}]`);
+  }
+}
+
 // quick tests
 console.log(knightMoves([0, 0], [1, 2])); // [[0,0],[1,2]]
 console.log(knightMoves([0, 0], [3, 3])); // 3 squares, 2 moves
@@ -77,3 +95,7 @@ console.log(knightMoves([3, 3], [0, 0])); // reverse of above
 console.log(knightMoves([0, 0], [7, 7])); // 7 squares, 6 moves
 console.log(knightMoves([3, 3], [4, 3])); // 4 squares, 3 moves
 console.log(knightMoves([0, 0], [0, 0])); // [[0,0]]
+
+// formatted output
+printKnightMoves([3, 3], [4, 3]);
+printKnightMoves([0, 0], [0, 0]);
