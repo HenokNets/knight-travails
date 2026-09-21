@@ -96,6 +96,18 @@ console.log(knightMoves([0, 0], [7, 7])); // 7 squares, 6 moves
 console.log(knightMoves([3, 3], [4, 3])); // 4 squares, 3 moves
 console.log(knightMoves([0, 0], [0, 0])); // [[0,0]]
 
-// formatted output
-printKnightMoves([3, 3], [4, 3]);
-printKnightMoves([0, 0], [0, 0]);
+// demo 
+
+// assignment examples (they are formatted)
+
+printKnightMoves([0, 0], [1, 2]); // 1 move
+printKnightMoves([0, 0], [3, 3]); // 2 moves
+printKnightMoves([3, 3], [0, 0]); // 2 moves, reversed
+printKnightMoves([3, 3], [4, 3]); // 3 moves
+printKnightMoves([0, 0], [7, 7]); // 6 moves
+
+// same square
+printKnightMoves([4, 4], [4, 4]); // 0 moves
+
+// raw array for eyeballing during dev
+console.log("raw:", knightMoves([0, 0], [7, 7]));
