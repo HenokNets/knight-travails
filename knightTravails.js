@@ -111,3 +111,55 @@ printKnightMoves([4, 4], [4, 4]); // 0 moves
 
 // raw array for eyeballing during dev
 console.log("raw:", knightMoves([0, 0], [7, 7]));
+
+// tests
+
+function sameSquare(a, b) {
+  return a[0] === b[0] && a[1] === b[1];
+}
+
+function assert(cond, msg) {
+  if (!cond) throw new Error("FAIL: " + msg);
+}
+
+// starts at start, ends at end, every step is a legal knight move,
+// every square is on the board, total moves <= 6
+function testPath(start, end) {
+  const path = knightMoves(start, end);
+
+  assert(sameSquare(path[0], start), `path starts at [${start}]`);
+  assert(sameSquare(path[path.length - 1], end), `path ends at [${end}]`);
+
+  for (let i = 0; i < path.length - 1; i++) {
+    const a = path[i];
+    const b = path[i + 1];
+    const dx = Math.abs(a[0] - b[0]);
+    const dy = Math.abs(a[1] - b[1]);
+
+    const legal = (dx === 1 && dy === 2) || (dx === 2 && dy === 1);
+    assert(legal, `step [${a}] -> [${b}] is a legal knight move`);
+    assert(isOnBoard(b), `step [${b}] is on the board`);
+  }
+
+  // max distance on an 8x8 is 6 moves
+  assert(path.length - 1 <= 6, `[${start}] -> [${end}] is at most 6 moves`);
+
+  return path.length - 1;
+}
+
+// assignment examples with known distances
+assert(testPath([0, 0], [1, 2]) === 1, "[0,0] -> [1,2] is 1 move");
+assert(testPath([0, 0], [3, 3]) === 2, "[0,0] -> [3,3] is 2 moves");
+assert(testPath([3, 3], [0, 0]) === 2, "[3,3] -> [0,0] is 2 moves");
+assert(testPath([3, 3], [4, 3]) === 3, "[3,3] -> [4,3] is 3 moves");
+assert(testPath([0, 0], [7, 7]) === 6, "[0,0] -> [7,7] is 6 moves");
+assert(testPath([0, 0], [0, 0]) === 0, "same square is 0 moves");
+
+// fuzz,  random pairs, same checks
+for (let i = 0; i < 200; i++) {
+  const start = [Math.floor(Math.random() * 8), Math.floor(Math.random() * 8)];
+  const end = [Math.floor(Math.random() * 8), Math.floor(Math.random() * 8)];
+  testPath(start, end);
+}
+
+console.log("all tests passed");
