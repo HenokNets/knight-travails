@@ -21,6 +21,20 @@ function getValidMoves([x, y]) {
   return moves;
 }
 
+// walk parents from target back to start, then reverse
+function reconstructPath(parent, endKey, endSquare) {
+  const path = [endSquare];
+  let key = endKey;
+
+  while (parent.has(key)) {
+    const prev = parent.get(key);
+    path.push(prev);
+    key = prev.join(",");
+  }
+
+  return path.reverse();
+}
+
 // quick test
 console.log(getValidMoves([0, 0])); // expected = [[2,1],[1,2]]
 console.log(getValidMoves([3, 3])); // expected = 8 squares
@@ -56,16 +70,7 @@ function knightMoves(start, end) {
 
       // found the target, walk parents back to start
       if (nextKey === endKey) {
-        const path = [next];
-        let key = nextKey;
-
-        while (parent.has(key)) {
-          const prev = parent.get(key);
-          path.push(prev);
-          key = prev.join(",");
-        }
-
-        return path.reverse();
+        return reconstructPath(parent, endKey, next);
       }
 
       queue.push(next);
